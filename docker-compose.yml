@@ -1,0 +1,22 @@
+services:
+  users-service:
+    image: nginx:alpine
+    command: >
+      sh -c "printf 'users ok' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    expose:
+      - "80"
+
+  orders-service:
+    image: nginx:alpine
+    command: >
+      sh -c "printf 'orders ok' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    expose:
+      - "80"
+
+  api-gateway:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - users-service
+      - orders-service
