@@ -1,17 +1,28 @@
 services:
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+
   users-service:
-    image: nginx:alpine
-    command: >
-      sh -c "printf 'users ok' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    build: ../users-service
+    environment:
+      - PORT=8081
+      - MONGO_URL=mongodb://mongo:27017/easyorders
+    depends_on:
+      - mongo
     expose:
-      - "80"
+      - "8081"
 
   orders-service:
-    image: nginx:alpine
-    command: >
-      sh -c "printf 'orders ok' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    build: ../orders-service
+    environment:
+      - PORT=8082
+      - MONGO_URL=mongodb://mongo:27017/easyorders
+    depends_on:
+      - mongo
     expose:
-      - "80"
+      - "8082"
 
   api-gateway:
     build: .
