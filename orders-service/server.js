@@ -48,6 +48,18 @@ app.post("/orders", async (req, res) => {
     return res.status(500).json({ message: "server error", error: String(err) });
   }
 });
+
+app.get("/", async (req, res) => {
+  const orders = await Order.find().sort({ createdAt: -1 }).limit(100);
+  res.json(
+    orders.map((o) => ({
+      id: o._id,
+      userId: o.userId,
+      status: o.status,
+      createdAt: o.createdAt,
+    }))
+  );
+});
  
 app.get("/orders", async (req, res) => {
   const orders = await Order.find().sort({ createdAt: -1 }).limit(100);
