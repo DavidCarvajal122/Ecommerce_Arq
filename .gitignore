@@ -1,0 +1,10 @@
+# Visual Studio
+.vs/
+
+# .NET
+bin/
+obj/
+
+# Otros
+*.user
+*.suo

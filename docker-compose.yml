@@ -1,16 +1,27 @@
-services:
+﻿services:
   mongo:
     image: mongo:6
     ports:
       - "27017:27017"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     
+      - "15672:15672"   
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
 
   users-service:
     build: ./users-service
     environment:
       - PORT=8081
       - MONGO_URL=mongodb://mongo:27017/easyorders
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - mongo
+      - rabbitmq
     expose:
       - "8081"
 
@@ -19,8 +30,10 @@ services:
     environment:
       - PORT=8082
       - MONGO_URL=mongodb://mongo:27017/easyorders
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - mongo
+      - rabbitmq
     expose:
       - "8082"
 
